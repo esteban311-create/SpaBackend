@@ -3,7 +3,7 @@ const Servicio = require('./Servicio');
 const Empleado = require('./Empleado');
 const Cita = require('./Cita');
 const HorarioBloqueado = require('./HorarioBloqueado');
-const Usuario = require('./usuario');
+const Usuario = require('./Usuario');
 
 // Relación Cliente - Cita
 Cita.belongsTo(Cliente, { foreignKey: 'clienteId', as: 'cliente' });
