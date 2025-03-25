@@ -1,5 +1,6 @@
 const express = require('express');
-const Usuario = require('../models/usuario'); // Asegúrate de importar correctamente el modelo
+const Usuario = require('../models/Usuario'); // Asegúrate de importar correctamente el modelo
+
 
 const router = express.Router();
 

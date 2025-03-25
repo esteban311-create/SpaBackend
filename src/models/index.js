@@ -5,7 +5,6 @@ const Cita = require('./Cita');
 const HorarioBloqueado = require('./HorarioBloqueado');
 const Usuario = require('./usuario');
 
-
 // Relación Cliente - Cita
 Cita.belongsTo(Cliente, { foreignKey: 'clienteId', as: 'cliente' });
 Cliente.hasMany(Cita, { foreignKey: 'clienteId', as: 'citas' });
