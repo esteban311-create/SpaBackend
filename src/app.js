@@ -21,21 +21,25 @@ const pagosRoutes = require("./routes/pagos");
 const app = express();
 
 // ------------------ ✅ CORS dinámico ------------------ //
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://spa-frontend-tau.vercel.app'
-];
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+    ? [
+        'https://spa-frontend-tau.vercel.app'
+    ] 
+    : [
+        'http://localhost:5173'
+    ];
 
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('No permitido por CORS'));
+            callback(new Error('No permitido por CORS: ' + origin));
         }
     },
     credentials: true
 }));
+
 
 // ------------------------------------------------------ //
 
