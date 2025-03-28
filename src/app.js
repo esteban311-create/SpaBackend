@@ -7,18 +7,19 @@ require('./models/index');
 const sequelize = require('./config/database');
 
 // Rutas
-const horariosRoutes = require('./routes/horarios');
-const webhookRoutes = require("./routes/webhook");
-const agendaRoutes = require("./routes/agendas");
-const serviceRoutes = require("./routes/services");
-const userRoutes = require('./routes/usuarios');
-const clientRoutes = require("./routes/clientes");
-const citaRoutes = require('./routes/citas');
-const authRoutes = require("./routes/auth");
-const empleadosRouter = require('./routes/empleados');
-const whatsappRoutes = require("./routes/whatsapp");
-const dashboardRoutes = require("./routes/dashboard");
-const pagosRoutes = require("./routes/pagos");
+const horariosRoutes = require(__dirname + '/routes/horarios');
+const webhookRoutes = require(__dirname + "/routes/webhook");
+const agendaRoutes = require(__dirname + "/routes/agendas");
+const serviceRoutes = require(__dirname + "/routes/services");
+const userRoutes = require(__dirname + '/routes/usuarios');
+const clientRoutes = require(__dirname + "/routes/clientes");
+const citaRoutes = require(__dirname + '/routes/citas');
+const authRoutes = require(__dirname + "/routes/auth");
+const empleadosRouter = require(__dirname + '/routes/empleados');
+const whatsappRoutes = require(__dirname + "/routes/whatsapp");
+const dashboardRoutes = require(__dirname + "/routes/dashboard");
+const pagosRoutes = require(__dirname + "/routes/pagos");
+
 
 const app = express();
 
