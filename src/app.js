@@ -2,9 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
-require('./models/index')
+require('./models/index');
 
 const sequelize = require('./config/database');
+
+// Rutas
 const horariosRoutes = require('./routes/horarios');
 const webhookRoutes = require("./routes/webhook");
 const agendaRoutes = require("./routes/agendas");
@@ -20,14 +22,11 @@ const pagosRoutes = require("./routes/pagos");
 
 const app = express();
 
-// ------------------ ✅ CORS dinámico ------------------ //
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-    ? [
-        'https://spa-frontend-tau.vercel.app'
-    ] 
-    : [
-        'http://localhost:5173'
-    ];
+// ------------------ ✅ Configuración de CORS ------------------ //
+const allowedOrigins = [
+    'http://localhost:5173', // desarrollo
+    'https://spa-frontend-tau.vercel.app' // producción
+];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -39,9 +38,7 @@ app.use(cors({
     },
     credentials: true
 }));
-
-
-// ------------------------------------------------------ //
+// ------------------------------------------------------------- //
 
 // Middlewares
 app.use(bodyParser.json());
@@ -53,7 +50,7 @@ app.use("/api/webhook", webhookRoutes);
 app.use("/api/agendas", agendaRoutes);
 app.use("/api/servicios", serviceRoutes);
 app.use('/api/usuarios', userRoutes);
-app.use("/api/clientes", clientRoutes); 
+app.use("/api/clientes", clientRoutes);
 app.use('/api/citas', citaRoutes);
 app.use('/api/horarios-bloqueados', horariosRoutes);
 app.use('/api/empleados', empleadosRouter);
@@ -61,7 +58,8 @@ app.use("/api/whatsapp", whatsappRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/pagos", pagosRoutes);
 
-console.log(app._router.stack.map(r => r.route && r.route.path).filter(Boolean));
+// Debug de rutas cargadas
+console.log("Rutas registradas:", app._router.stack.map(r => r.route && r.route.path).filter(Boolean));
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
@@ -69,6 +67,6 @@ const PORT = process.env.PORT || 5000;
 sequelize.sync({ alter: true })
     .then(() => {
         console.log('✅ Base de datos sincronizada correctamente');
-        app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+        app.listen(PORT, () => console.log(`🚀 Servidor corriendo en el puerto ${PORT}`));
     })
     .catch(err => console.error('❌ Error al sincronizar la base de datos:', err));
