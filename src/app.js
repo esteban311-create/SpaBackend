@@ -19,6 +19,23 @@ const dashboardRoutes = require("./routes/dashboard");
 const pagosRoutes = require("./routes/pagos");
 
 const app = express();
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://spa-frontend-tau.vercel.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+      } else {
+          callback(new Error('No permitido por CORS'));
+      }
+  },
+  credentials: true
+}));
+
 // Middlewares
 app.use(cors());
 app.use(bodyParser.json()); // Procesa JSON
