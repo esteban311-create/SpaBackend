@@ -20,26 +20,28 @@ const pagosRoutes = require("./routes/pagos");
 
 const app = express();
 
+// ------------------ ✅ CORS dinámico ------------------ //
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://spa-frontend-tau.vercel.app'
+    'http://localhost:5173',
+    'https://spa-frontend-tau.vercel.app'
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-      } else {
-          callback(new Error('No permitido por CORS'));
-      }
-  },
-  credentials: true
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('No permitido por CORS'));
+        }
+    },
+    credentials: true
 }));
 
+// ------------------------------------------------------ //
+
 // Middlewares
-app.use(cors());
-app.use(bodyParser.json()); // Procesa JSON
-app.use(bodyParser.urlencoded({ extended: true })); // Procesa x-www-form-urlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas
 app.use("/api/auth", authRoutes);
@@ -60,16 +62,9 @@ console.log(app._router.stack.map(r => r.route && r.route.path).filter(Boolean))
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 
-
 sequelize.sync({ alter: true })
     .then(() => {
         console.log('✅ Base de datos sincronizada correctamente');
         app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
     })
     .catch(err => console.error('❌ Error al sincronizar la base de datos:', err));
-    
-//app.listen(PORT, () => {
-  //console.log(`Servidor corriendo en el puerto ${PORT}`);
-
-  
-//});
