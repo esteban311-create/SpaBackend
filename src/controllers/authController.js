@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 
 // Controlador para iniciar sesión
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { correo, password } = req.body;
     const Usuario = require('../models/Usuario');
     try {
-        const usuario = await Usuario.scope('withPassword').findOne({ where: { email } });
+        const usuario = await Usuario.scope('withPassword').findOne({ where: { correo } });
         if (!usuario) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
