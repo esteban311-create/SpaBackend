@@ -18,13 +18,13 @@ exports.login = async (req, res) => {
         }   
 
         const token = jwt.sign(
-            { id: usuario.id, nombre: usuario.nombre, email: usuario.email },
+            { id: usuario.id, nombre: usuario.nombre, correo: usuario.correo },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
         
+        res.json({ token, usuario: { id: usuario.id, nombre: usuario.nombre, correo: usuario.correo } });
         
-        res.json({ token, usuario: { id: usuario.id, nombre: usuario.nombre, email: usuario.email } });
     } catch (error) {
         console.error('Error al autenticar usuario:', error);
         res.status(500).json({ error: 'Error al autenticar usuario' });
