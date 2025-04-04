@@ -52,4 +52,4 @@ Usuario.beforeUpdate(async (usuario) => {
     }
 });
 
-module.exports = Usuario
+module.exports = Usuario;

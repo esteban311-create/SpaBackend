@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 // Controlador para iniciar sesión
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    
     const Usuario = require('../models/Usuario');
     try {
         const usuario = await Usuario.scope('withPassword').findOne({ where: { email } });
@@ -18,12 +19,12 @@ exports.login = async (req, res) => {
         }   
 
         const token = jwt.sign(
-            { id: usuario.id, nombre: usuario.nombre, correo: usuario.correo },
+            { id: usuario.id, nombre: usuario.nombre, email: usuario.email },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
         
-        res.json({ token, usuario: { id: usuario.id, nombre: usuario.nombre, correo: usuario.correo } });
+        res.json({ token, usuario: { id: usuario.id, nombre: usuario.nombre, correo: usuario.email } });
         
     } catch (error) {
         console.error('Error al autenticar usuario:', error);
