@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-
 const HorarioBloqueado = sequelize.define(
     'HorarioBloqueado',
     {
@@ -21,10 +20,18 @@ const HorarioBloqueado = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        empleadoId: { // ✅ Campo que estaba faltando
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Empleados',
+                key: 'id'
+            }
+        },
     },
     {
         timestamps: true,
-        freezeTableName: true, // Usa el nombre del modelo como nombre exacto de la tabla
+        freezeTableName: true,
     }
 );
 
