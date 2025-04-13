@@ -22,4 +22,18 @@ router.delete('/:id', async (req, res) => {
   res.status(204).send();
 });
 
+// Obtener un empleado por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const empleado = await Empleado.findByPk(req.params.id);
+    if (!empleado) {
+      return res.status(404).json({ error: 'Empleado no encontrado' });
+    }
+    res.json(empleado);
+  } catch (error) {
+    console.error('Error al obtener empleado por ID:', error);
+    res.status(500).json({ error: 'Error al obtener el empleado' });
+  }
+});
+
 module.exports = router
