@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-//const Usuario = require('./usuario'); // Relación con el modelo de empleados
+
 
 const HorarioBloqueado = sequelize.define(
     'HorarioBloqueado',

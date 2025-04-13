@@ -35,7 +35,7 @@ const Cita = sequelize.define('Cita', {
         allowNull: false,
     },
     estado: {
-        type: DataTypes.ENUM('pendiente', 'confirmada', 'cancelada'),
+        type: DataTypes.ENUM('pendiente', 'confirmada', 'cancelada','reagendar'),
         defaultValue: 'pendiente',
     },
 });

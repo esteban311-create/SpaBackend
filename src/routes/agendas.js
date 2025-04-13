@@ -176,22 +176,5 @@ router.delete('/:id', authMiddleware, roleMiddleware(['admin']), async (req, res
     }
 });
 
-router.get('/reportes/citas-por-mes', async (req, res) => {
-    try {
-        const reportes = await Agenda.findAll({
-            attributes: [
-                [sequelize.fn('DATE_FORMAT', sequelize.col('fecha'), '%Y-%m'), 'mes'],
-                [sequelize.fn('COUNT', sequelize.col('id')), 'totalCitas'],
-            ],
-            group: ['mes'],
-        });
-
-        res.json(reportes);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al generar el reporte' });
-    }
-});
-
 
 module.exports = router;

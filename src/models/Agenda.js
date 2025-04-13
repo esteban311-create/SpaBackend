@@ -2,18 +2,25 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Agenda = sequelize.define('Agenda', {
-    titulo: {
-        type: DataTypes.STRING,
+    titulo: DataTypes.STRING,
+    descripcion: DataTypes.STRING,
+    fecha: DataTypes.DATE,
+    clienteId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: 'Clientes',
+            key: 'id',
+        },
     },
-    descripcion: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    fecha: {
-        type: DataTypes.DATE,
+    servicioId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: 'Servicios',
+            key: 'id',
+        },
     },
 });
 
-module.exports = { Agenda };
+module.exports = Agenda;

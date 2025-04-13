@@ -10,6 +10,7 @@ const { Op } = require('sequelize'); // Para operadores de Sequelize
 router.post('/', async (req, res) => {
     try {
         const { fecha, horaInicio, horaFin, clienteId, servicioId, empleadoId } = req.body;
+        console.log("📥 Datos recibidos en /api/citas:", req.body); // 👈 Agrega esto
 
         // Validar que cliente y servicio existan
         const cliente = await Cliente.findByPk(clienteId);

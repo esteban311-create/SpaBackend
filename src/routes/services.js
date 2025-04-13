@@ -76,5 +76,19 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el servicio' });
     }
 });
+// Obtener un servicio por ID
+router.get('/:id', async (req, res) => {
+    try {
+      const servicio = await Servicio.findByPk(req.params.id);
+      if (!servicio) {
+        return res.status(404).json({ error: 'Servicio no encontrado' });
+      }
+      res.json(servicio);
+    } catch (error) {
+      console.error('Error al obtener servicio por ID:', error);
+      res.status(500).json({ error: 'Error al obtener el servicio' });
+    }
+  });
+  
 
 module.exports = router
