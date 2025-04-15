@@ -53,7 +53,7 @@ router.post("/", async (req, res) => {
             nuevoEstado = "confirmada";
             mensajeRespuesta = `Tu cita ha sido ${nuevoEstado}. ¡Gracias por tu confirmación!`;
         } else if (mensaje.includes("reagendar") || mensaje.includes("reprogramar cita")) {
-            nuevoEstado = "reagendada";
+            nuevoEstado = "reagendar";
             mensajeRespuesta = `Tu cita ha sido ${nuevoEstado}. Te contactaremos para elegir una nueva fecha. ¡Gracias!`;
         } else if (mensaje.includes("pendiente")) {
             nuevoEstado = "pendiente";
