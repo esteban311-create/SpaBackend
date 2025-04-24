@@ -74,10 +74,15 @@ router.post("/", async (req, res) => {
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
         await client.messages.create({
             from: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
-            to: `whatsapp:${telefono}`,
-            body: mensajeRespuesta,
-        });
-
+            to: `whatsapp:${telefono}`, // número destino
+            contentSid: "HX2d0f690dc970579f940116589e154cf8", // tu content SID
+            contentVariables: JSON.stringify({
+              1: cliente.nombre,                    // variable {{1}}
+              2: ultimaCita.fecha,                  // variable {{2}}, formato: "19/02/2025"
+              3: ultimaCita.horaInicio              // variable {{3}}, formato: "2:00 PM"
+            })
+          });
+          
         console.log("📢 Respuesta enviada a WhatsApp");
 
         // 📌 Enviar respuesta JSON solo después de Twilio
