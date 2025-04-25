@@ -75,13 +75,22 @@ router.post("/", async (req, res) => {
         await client.messages.create({
             from: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
             to: `whatsapp:${telefono}`,
-            contentSid: "HX2d0f690dc970579f940116589e154cf8", // <- tu SID correcto
-            contentVariables: JSON.stringify({
-                1: cliente.nombre,
-                2: ultimaCita.fecha,
-                3: ultimaCita.horaInicio
-            })
-        });
+            template: {
+              name: "confirmacion_cita_spa_2",
+              language: { code: "es" },
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    { type: "text", text: cliente.nombre },
+                    { type: "text", text: ultimaCita.fecha },
+                    { type: "text", text: ultimaCita.horaInicio }
+                  ]
+                }
+              ]
+            }
+          });
+          
         
         console.log("📢 Respuesta enviada a WhatsApp");
 
