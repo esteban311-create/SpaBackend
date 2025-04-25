@@ -3,6 +3,7 @@ const router = express.Router();
 const { Cliente, Cita } = require("../models");
 const twilio = require('twilio'); 
 const qs = require("qs");
+const axios = require("axios");
 
 // Cargar credenciales Twilio desde .env
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER } = process.env;
@@ -73,33 +74,33 @@ router.post("/", async (req, res) => {
         console.log(`✅ Cita ${ultimaCita.id} actualizada a estado: ${nuevoEstado}`);
 
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
-        const axios = require("axios");
-
+        
+        
         await axios.post(
-            `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
-            qs.stringify({
-              From: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
-              To: `whatsapp:${telefono}`,
-              MessagingServiceSid: TWILIO_MESSAGING_SERVICE_SID, // si tienes uno, o usa From directamente
-              TemplateSid: "HX2d0ff6d98c97052794b11658e9154cf8",
-              ContentVariables: JSON.stringify({
-                1: cliente.nombre,
-                2: ultimaCita.fecha,
-                3: ultimaCita.horaInicio
-              })
-            }),
-            {
-              auth: {
-                username: TWILIO_ACCOUNT_SID,
-                password: TWILIO_AUTH_TOKEN
-              },
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              }
+          `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
+          qs.stringify({
+            To: `whatsapp:${telefono}`,
+            From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+            Channel: 'whatsapp',
+            MessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID, // opcional si usas uno
+            TemplateSid: "HX2c0ff6d98c97052794b11658e9154cf8", // <- usa tu SID real de plantilla
+            ContentVariables: JSON.stringify({
+              "1": cliente.nombre,
+              "2": ultimaCita.fecha,
+              "3": ultimaCita.horaInicio
+            })
+          }),
+          {
+            auth: {
+              username: process.env.TWILIO_ACCOUNT_SID,
+              password: process.env.TWILIO_AUTH_TOKEN
+            },
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
             }
-          );
-
-          
+          }
+        );
+        
         
         console.log("📢 Respuesta enviada a WhatsApp");
 
