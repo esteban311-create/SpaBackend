@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Cliente, Cita } = require("../models");
 const twilio = require('twilio'); 
+const qs = require("qs");
 
 // Cargar credenciales Twilio desde .env
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER } = process.env;
@@ -74,27 +75,29 @@ router.post("/", async (req, res) => {
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
         const axios = require("axios");
 
-        await client.messages.create({
-            from: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
-            to: `whatsapp:${telefono}`,
-            messagingServiceSid: TWILIO_MESSAGING_SERVICE_SID, // opcional si usas Messaging Service
-            contentSid: undefined, // elimínalo si lo estás usando
-            template: {
-              name: "confirmacion_cita_spa_2",
-              languageCode: "es", // Idioma de la plantilla
-              components: [
-                {
-                  type: "body",
-                  parameters: [
-                    { type: "text", text: cliente.nombre },
-                    { type: "text", text: ultimaCita.fecha },
-                    { type: "text", text: ultimaCita.horaInicio }
-                  ]
-                }
-              ]
+        await axios.post(
+            `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+            qs.stringify({
+              From: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
+              To: `whatsapp:${telefono}`,
+              MessagingServiceSid: TWILIO_MESSAGING_SERVICE_SID, // si tienes uno, o usa From directamente
+              TemplateSid: "HX2d0ff6d98c97052794b11658e9154cf8",
+              ContentVariables: JSON.stringify({
+                1: cliente.nombre,
+                2: ultimaCita.fecha,
+                3: ultimaCita.horaInicio
+              })
+            }),
+            {
+              auth: {
+                username: TWILIO_ACCOUNT_SID,
+                password: TWILIO_AUTH_TOKEN
+              },
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
             }
-          });
-          
+          );
 
           
         
