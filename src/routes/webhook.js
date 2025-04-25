@@ -74,22 +74,27 @@ router.post("/", async (req, res) => {
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
         const axios = require("axios");
 
-await axios.post(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`, new URLSearchParams({
-  From: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
-  To: `whatsapp:${telefono}`,
-  TemplateSid: "HX2d0f690dc970579f940116589e154cf8",
-  ContentVariables: JSON.stringify({
-    1: cliente.nombre,
-    2: ultimaCita.fecha,
-    3: ultimaCita.horaInicio
-  })
-}), {
-  auth: {
-    username: TWILIO_ACCOUNT_SID,
-    password: TWILIO_AUTH_TOKEN
-  },
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-});
+        await client.messages.create({
+            from: `whatsapp:${TWILIO_WHATSAPP_NUMBER}`,
+            to: `whatsapp:${telefono}`,
+            messagingServiceSid: TWILIO_MESSAGING_SERVICE_SID, // opcional si usas Messaging Service
+            contentSid: undefined, // elimínalo si lo estás usando
+            template: {
+              name: "confirmacion_cita_spa_2",
+              languageCode: "es", // Idioma de la plantilla
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    { type: "text", text: cliente.nombre },
+                    { type: "text", text: ultimaCita.fecha },
+                    { type: "text", text: ultimaCita.horaInicio }
+                  ]
+                }
+              ]
+            }
+          });
+          
 
           
         
