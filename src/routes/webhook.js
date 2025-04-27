@@ -77,16 +77,42 @@ router.post("/", async (req, res) => {
         
         
       // ✅ Crear el payload que se enviará a Twilio
+// Formatear fecha y hora
+// 🔥 Nueva manera de formatear:
+
+// 🔥 Nueva manera de formatear para Date
+// 🔥 Nueva manera de formatear fecha y hora:
+
+// Formatear la fecha
+const fechaISO = ultimaCita.fecha.toISOString();
+const fechaFormateada = fechaISO.split('T')[0].split('-').reverse().join('/');
+
+// Formatear la hora en formato 12 horas (AM/PM)
+let horaFormateada = '';
+if (ultimaCita.horaInicio) {
+  const [hora, minuto] = ultimaCita.horaInicio.split(':');
+  let horaInt = parseInt(hora);
+  const ampm = horaInt >= 12 ? 'PM' : 'AM';
+  horaInt = horaInt % 12 || 12; // para que 0 sea 12
+  horaFormateada = `${horaInt}:${minuto} ${ampm}`;
+}
+
+// 🚀 Crear payload
 const payload = {
-    To: `whatsapp:${telefono}`,
-    From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-    ContentSid: "HX2c0ff6d98c97052794b11658e9154cf8", // Tu Content Template SID
-    ContentVariables: JSON.stringify({
-      "1": cliente.nombre,
-      "2": ultimaCita.fecha,
-      "3": ultimaCita.horaInicio
-    })
-  };
+  To: `whatsapp:${telefono}`,
+  From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+  ContentSid: "HX2c0ff6d98c97052794b11658e9154cf8",
+  ContentVariables: JSON.stringify({
+    "1": cliente.nombre,
+    "2": fechaFormateada,
+    "3": horaFormateada
+  })
+};
+
+console.log("🛫 Payload que se enviará a Twilio:", JSON.stringify(payload, null, 2));
+
+
+
   
   // ✅ Mostrar el payload bonito antes de enviarlo
   console.log("🛫 Payload que se enviará a Twilio:", JSON.stringify(payload, null, 2));
