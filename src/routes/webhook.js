@@ -76,33 +76,42 @@ router.post("/", async (req, res) => {
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
         
         
-        const payload = {
-            To: `whatsapp:${telefono}`,
-            From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-            ContentSid: "HX2c0ff6d98c97052794b11658e9154cf8",  // (ojo que aquí debe ser ContentSid, no TemplateSid)
-            ContentVariables: JSON.stringify({
-              "1": cliente.nombre,            // Nombre del cliente
-              "2": ultimaCita.fecha,           // Fecha de la cita
-              "3": ultimaCita.horaInicio       // Hora de la cita
-            })
-          };
-          
-          console.log("🛫 Payload que enviamos a Twilio:", payload);
-          
-          await axios.post(
-            `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
-            qs.stringify(payload),
-            {
-              auth: {
-                username: process.env.TWILIO_ACCOUNT_SID,
-                password: process.env.TWILIO_AUTH_TOKEN
-              },
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              }
-            }
-          );
-          
+      // ✅ Crear el payload que se enviará a Twilio
+const payload = {
+    To: `whatsapp:${telefono}`,
+    From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+    ContentSid: "HX2c0ff6d98c97052794b11658e9154cf8", // Tu Content Template SID
+    ContentVariables: JSON.stringify({
+      "1": cliente.nombre,
+      "2": ultimaCita.fecha,
+      "3": ultimaCita.horaInicio
+    })
+  };
+  
+  // ✅ Mostrar el payload bonito antes de enviarlo
+  console.log("🛫 Payload que se enviará a Twilio:", JSON.stringify(payload, null, 2));
+  
+  // ✅ Enviar el mensaje a Twilio dentro de un try-catch
+  try {
+    await axios.post(
+      `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
+      qs.stringify(payload),
+      {
+        auth: {
+          username: process.env.TWILIO_ACCOUNT_SID,
+          password: process.env.TWILIO_AUTH_TOKEN
+        },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }
+    );
+    console.log("✅ Mensaje enviado exitosamente a Twilio");
+  } catch (error) {
+    console.error("❌ Error enviando a Twilio:", error.response?.data || error.message);
+  }
+  
+
         console.log("🛫 Payload que se enviará a Twilio:", payload);
         
         
