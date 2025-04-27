@@ -76,30 +76,34 @@ router.post("/", async (req, res) => {
         // ✅ Enviar confirmación al usuario con el mensaje correspondiente
         
         
-        await axios.post(
-          `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
-          qs.stringify({
+        const payload = {
             To: `whatsapp:${telefono}`,
             From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-            Channel: 'whatsapp',
-            MessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID, // opcional si usas uno
-            TemplateSid: "HX2c0ff6d98c97052794b11658e9154cf8", // <- usa tu SID real de plantilla
+            ContentSid: "HX2c0ff6d98c97052794b11658e9154cf8",  // (ojo que aquí debe ser ContentSid, no TemplateSid)
             ContentVariables: JSON.stringify({
-              "1": cliente.nombre,
-              "2": ultimaCita.fecha,
-              "3": ultimaCita.horaInicio
+              "1": cliente.nombre,            // Nombre del cliente
+              "2": ultimaCita.fecha,           // Fecha de la cita
+              "3": ultimaCita.horaInicio       // Hora de la cita
             })
-          }),
-          {
-            auth: {
-              username: process.env.TWILIO_ACCOUNT_SID,
-              password: process.env.TWILIO_AUTH_TOKEN
-            },
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
+          };
+          
+          console.log("🛫 Payload que enviamos a Twilio:", payload);
+          
+          await axios.post(
+            `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
+            qs.stringify(payload),
+            {
+              auth: {
+                username: process.env.TWILIO_ACCOUNT_SID,
+                password: process.env.TWILIO_AUTH_TOKEN
+              },
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
             }
-          }
-        );
+          );
+          
+        console.log("🛫 Payload que se enviará a Twilio:", payload);
         
         
         console.log("📢 Respuesta enviada a WhatsApp");
